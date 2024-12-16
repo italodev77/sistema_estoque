@@ -1,10 +1,8 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import {
-  LayoutGridIcon,
-  Link,
-  PackageIcon,
-  ShoppingBasketIcon,
-} from "lucide-react";
+import Link from "next/link";
+import { LayoutGridIcon, PackageIcon, ShoppingBasketIcon } from "lucide-react";
+
 const Sidebar = () => {
   return (
     <div className="w-64 bg-white">
@@ -12,26 +10,37 @@ const Sidebar = () => {
       <div className="px-8 py-6">
         <h1 className="text-2xl font-bold">EstoquErp</h1>
       </div>
-      {/*botoes */}
+      {/* botões */}
       <div className="flex flex-col gap-2 p-2">
-        <Button variant="ghost" className="justify-start gap-2" asChild>
-          <Link href="/">
+        <Link href="/" passHref>
+          <Button
+            variant="ghost"
+            className="mx-auto w-[100%] justify-start gap-2"
+          >
             <LayoutGridIcon size={20} />
             Dashboard
-          </Link>
-        </Button>
-        <Button variant="ghost" className="justify-start gap-2" asChild>
-          <Link href="/products">
+          </Button>
+        </Link>
+
+        <Link href="/products" passHref>
+          <Button
+            variant="ghost"
+            className="mx-auto w-[100%] justify-start gap-2"
+          >
             <PackageIcon size={20} />
             Produtos
-          </Link>
-        </Button>
-        <Button variant="ghost" className="justify-start gap-2" asChild>
-          <Link href="/sales">
+          </Button>
+        </Link>
+
+        <Link href="/sales" passHref>
+          <Button
+            variant="ghost"
+            className="mx-auto w-[100%] justify-start gap-2"
+          >
             <ShoppingBasketIcon size={20} />
-            vendas
-          </Link>
-        </Button>
+            Vendas
+          </Button>
+        </Link>
       </div>
     </div>
   );
