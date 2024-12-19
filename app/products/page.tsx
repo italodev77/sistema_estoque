@@ -5,6 +5,16 @@ import { api } from "@/services/api";
 import { Product } from "@/types/Product";
 import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProductPage() {
   let products: Product[] = [];
@@ -27,10 +37,22 @@ export default async function ProductPage() {
           </span>
           <h2 className="text-xl font-semibold">Produtos</h2>
         </div>
-        <Button className="gap-2">
-          <PlusIcon size={20} />
-          Novo Produto
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <PlusIcon size={20} />
+              Novo Produto
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Criar produto</DialogTitle>
+              <DialogDescription>
+                Preencha as informações abaixo
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
       <DataTable columns={productTableColumns} data={products} />
     </div>
