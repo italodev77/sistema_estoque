@@ -1,18 +1,10 @@
 // app/products/page.tsx
-import { Button } from "@/components/ui/button";
+
 import { DataTable } from "@/components/ui/data-table";
 import { api } from "@/services/api";
 import { Product } from "@/types/Product";
-import { PlusIcon } from "lucide-react";
 import { productTableColumns } from "./_components/table-columns";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import AddProductButton from "./_components/add-product-button";
 
 export const dynamic = "force-dynamic";
 
@@ -37,22 +29,7 @@ export default async function ProductPage() {
           </span>
           <h2 className="text-xl font-semibold">Produtos</h2>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <PlusIcon size={20} />
-              Novo Produto
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Criar produto</DialogTitle>
-              <DialogDescription>
-                Preencha as informações abaixo
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+        <AddProductButton />
       </div>
       <DataTable columns={productTableColumns} data={products} />
     </div>
