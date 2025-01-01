@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
@@ -25,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
+import { api } from "@/services/api";
 
 const formSchema = z.object({
   description: z.string().trim().min(1, {
@@ -49,9 +51,23 @@ const AddProductButton = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log({ data });
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const response = await api.post("/products", data);
+
+      console.log("Produto salvo com sucesso:", response.data);
+
+      form.reset();
+      document.dispatchEvent(new Event("dialogClose"));
+    } catch (error: any) {
+      console.error(
+        "Erro ao salvar o produto:",
+        error.response?.data || error.message,
+      );
+      alert("Erro ao salvar o produto. Tente novamente!");
+    }
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -88,20 +104,23 @@ const AddProductButton = () => {
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Preço do produto:</FormLabel>
+                  <FormLabel>Preço</FormLabel>
                   <FormControl>
-                    <Input placeholder="Informe o preço" {...field} />
+                    <NumericFormat
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      fixedDecimalScale
+                      decimalScale={2}
+                      prefix="R$ "
+                      allowNegative={false}
+                      customInput={Input}
+                      onValueChange={(values) =>
+                        field.onChange(values.floatValue)
+                      }
+                      {...field}
+                      onChange={() => {}}
+                    />
                   </FormControl>
-                  <NumericFormat
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    fixedDecimalScale
-                    decimalScale={2}
-                    prefix="R$ "
-                    allowNegative={false}
-                    customInput={Input}
-                    {...field}
-                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -115,11 +134,16 @@ const AddProductButton = () => {
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Informa o estoque"
-                      {...field}
+                      placeholder="Informe o estoque"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(
+                          value === "" ? undefined : parseInt(value, 10),
+                        );
+                      }}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -129,7 +153,13 @@ const AddProductButton = () => {
                 <Button variant="secondary">Cancelar</Button>
               </DialogClose>
 
-              <Button type="submit">Salvar</Button>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="gap-1.5"
+              >
+                Salvar
+              </Button>
             </DialogFooter>
           </form>
         </Form>
